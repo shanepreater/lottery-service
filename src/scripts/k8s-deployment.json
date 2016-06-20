@@ -1,0 +1,44 @@
+{
+  "apiVersion": "extensions/v1beta1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "user_proxy"
+  },
+  "spec": {
+    "replicas": 2,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "haproxy",
+          "zone": "frontend",
+          "profile": "op"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "haproxy",
+            "image": "zagarol/haproxy:latest",
+            "ports": {
+              "containerPort": 80
+            },  
+            "volumeMounts": [
+              {
+                "mountPath": "/config/haproxy",
+                "name": "haproxy-config",
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "haproxy-config",
+            "gitRepo": {
+              "repository": "https://github.com/shanepreater/general-config.git"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
